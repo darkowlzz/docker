@@ -1,6 +1,7 @@
 package volume
 
 import (
+	"time"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -59,6 +60,7 @@ type Volume interface {
 	DriverName() string
 	// Path returns the absolute path to the volume.
 	Path() string
+	Created() time.Time
 	// Mount mounts the volume and returns the absolute path to
 	// where it can be consumed.
 	Mount(id string) (string, error)

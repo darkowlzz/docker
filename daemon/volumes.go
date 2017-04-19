@@ -30,6 +30,7 @@ func volumeToAPIType(v volume.Volume) *types.Volume {
 	tv := &types.Volume{
 		Name:   v.Name(),
 		Driver: v.DriverName(),
+		Created: v.Created().String(),
 	}
 	if v, ok := v.(volume.DetailedVolume); ok {
 		tv.Labels = v.Labels()

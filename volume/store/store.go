@@ -418,6 +418,7 @@ func (s *VolumeStore) create(name, driverName string, opts, labels map[string]st
 	metadata := volumeMetadata{
 		Name:    name,
 		Driver:  vd.Name(),
+		Created: time.Now().UTC(),
 		Labels:  labels,
 		Options: opts,
 	}

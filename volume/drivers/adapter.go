@@ -4,6 +4,7 @@ import (
 	"errors"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/docker/docker/volume"
@@ -31,6 +32,7 @@ func (a *volumeDriverAdapter) Create(name string, opts map[string]string) (volum
 	return &volumeAdapter{
 		proxy:        a.proxy,
 		name:         name,
+		created:      time.Now().UTC(),
 		driverName:   a.name,
 		baseHostPath: a.baseHostPath,
 	}, nil
@@ -80,6 +82,7 @@ func (a *volumeDriverAdapter) Get(name string) (volume.Volume, error) {
 	return &volumeAdapter{
 		proxy:        a.proxy,
 		name:         v.Name,
+		created:      v.Created,
 		driverName:   a.Name(),
 		eMount:       v.Mountpoint,
 		status:       v.Status,
@@ -122,6 +125,7 @@ func (a *volumeDriverAdapter) getCapabilities() volume.Capability {
 type volumeAdapter struct {
 	proxy        *volumeDriverProxy
 	name         string
+	created      time.Time
 	baseHostPath string
 	driverName   string
 	eMount       string // ephemeral host volume path
@@ -130,6 +134,7 @@ type volumeAdapter struct {
 
 type proxyVolume struct {
 	Name       string
+	Created    time.Time
 	Mountpoint string
 	Status     map[string]interface{}
 }
@@ -140,6 +145,10 @@ func (a *volumeAdapter) Name() string {
 
 func (a *volumeAdapter) DriverName() string {
 	return a.driverName
+}
+
+func (a *volumeAdapter) Created() time.Time {
+	return a.created
 }
 
 func (a *volumeAdapter) Path() string {

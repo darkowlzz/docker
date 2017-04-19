@@ -1,6 +1,7 @@
 package store
 
 import (
+	"time"
 	"encoding/json"
 
 	"github.com/Sirupsen/logrus"
@@ -13,6 +14,7 @@ var volumeBucketName = []byte("volumes")
 type volumeMetadata struct {
 	Name    string
 	Driver  string
+	Created time.Time
 	Labels  map[string]string
 	Options map[string]string
 }

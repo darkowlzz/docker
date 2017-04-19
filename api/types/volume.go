@@ -7,6 +7,10 @@ package types
 // swagger:model Volume
 type Volume struct {
 
+	// created
+	// Required: true
+	Created string `json:"Created"`
+
 	// Name of the volume driver used by the volume.
 	// Required: true
 	Driver string `json:"Driver"`

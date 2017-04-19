@@ -1,6 +1,7 @@
 package inspect
 
 import (
+	"fmt"
 	"bytes"
 	"encoding/json"
 	"io"
@@ -64,6 +65,7 @@ func Inspect(out io.Writer, references []string, tmplStr string, getRef GetRefFu
 	var inspectErrs []string
 	for _, ref := range references {
 		element, raw, err := getRef(ref)
+		fmt.Println(element)
 		if err != nil {
 			inspectErrs = append(inspectErrs, err.Error())
 			continue

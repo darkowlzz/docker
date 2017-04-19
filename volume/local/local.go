@@ -4,6 +4,7 @@
 package local
 
 import (
+	"time"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -68,6 +69,7 @@ func New(scope string, rootUID, rootGID int) (*Root, error) {
 		volumes: make(map[string]*localVolume),
 		rootUID: rootUID,
 		rootGID: rootGID,
+		created: time.Now().UTC(),
 	}
 
 	dirs, err := ioutil.ReadDir(rootDirectory)
@@ -90,6 +92,7 @@ func New(scope string, rootUID, rootGID int) (*Root, error) {
 			driverName: r.Name(),
 			name:       name,
 			path:       r.DataPath(name),
+			created:    r.created,
 		}
 		r.volumes[name] = v
 		optsFilePath := filepath.Join(rootDirectory, name, "opts.json")
@@ -127,6 +130,7 @@ type Root struct {
 	volumes map[string]*localVolume
 	rootUID int
 	rootGID int
+	created time.Time
 }
 
 // List lists all the volumes
@@ -185,6 +189,8 @@ func (r *Root) Create(name string, opts map[string]string) (volume.Volume, error
 		driverName: r.Name(),
 		name:       name,
 		path:       path,
+		// created:    time.Now().UTC(),
+		created:    r.created,
 	}
 
 	if len(opts) != 0 {
@@ -282,6 +288,7 @@ type localVolume struct {
 	name string
 	// path is the path on the host where the data lives
 	path string
+  created time.Time
 	// driverName is the name of the driver that created the volume.
 	driverName string
 	// opts is the parsed list of options used to create the volume
@@ -303,6 +310,10 @@ func (v *localVolume) DriverName() string {
 // Path returns the data location.
 func (v *localVolume) Path() string {
 	return v.path
+}
+
+func (v *localVolume) Created() time.Time {
+	return v.created
 }
 
 // Mount implements the localVolume interface, returning the data location.
